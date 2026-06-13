@@ -53,3 +53,16 @@ This lab is hosted on a local Linux environment, orchestrating applications usin
 - **Specs:** 4 vCPUs, 4GB RAM, 30GB Disk
 
 *Documentation and commands will be updated as they are executed.*
+
+
+### Phase 1: Infrastructure & Linux Foundation
+
+#### 1. Virtual Machine Provisioning
+- **Hypervisor:** VMware Workstation
+- **OS:** Ubuntu Server 24.04 LTS (eller 22.04 LTS)
+- **Specs:** 4 vCPUs, 4GB RAM, 30GB Disk
+- **Network IP:** [Sett inn din IP her, f.eks. 192.168.1.50]
+
+```bash
+# Commands executed for initialization:
+sudo apt update && sudo apt upgrade -y
