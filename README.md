@@ -62,7 +62,12 @@ sudo apt update && sudo apt upgrade -y
 To secure the node, the Uncomplicated Firewall (UFW) was enabled, allowing only explicitly permitted traffic, starting with SSH (port 22).
 
 ```bash
+# Allow SSH traffic on port 22 through the firewall
 sudo ufw allow ssh
+
+# Activate the firewall
 sudo ufw enable
+
+# Check if the firewall is active
 sudo ufw status verbose
 ```
