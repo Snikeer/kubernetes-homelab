@@ -19,7 +19,7 @@ This lab is hosted on a local Linux environment, orchestrating applications usin
 ## 🚀 Project Roadmap & Progress
 
 ### 🖥️ Phase 1: Infrastructure & Linux Foundation
-- [ ] Setup Linux Virtual Machine (Ubuntu Server)
+- [x] Setup Linux Virtual Machine (Ubuntu Server)
 - [ ] Configure SSH, Networking, and Firewall (UFW)
 - [ ] Install and configure Container Runtime (Docker/Containerd)
 
