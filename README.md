@@ -48,16 +48,6 @@ This lab is hosted on a local Linux environment, orchestrating applications usin
 ### Phase 1: Infrastructure & Linux Foundation
 
 #### 1. Virtual Machine Provisioning
-- **Hypervisor:** VMware Workstation / VirtualBox / Proxmox
-- **OS:** Ubuntu Server 22.04 LTS
-- **Specs:** 4 vCPUs, 4GB RAM, 30GB Disk
-
-*Documentation and commands will be updated as they are executed.*
-
-
-### Phase 1: Infrastructure & Linux Foundation
-
-#### 1. Virtual Machine Provisioning
 - **Hypervisor:** VMware Workstation
 - **OS:** Ubuntu Server 26.04 LTS
 - **Specs:** 4 vCPUs, 4GB RAM, 30GB Disk
