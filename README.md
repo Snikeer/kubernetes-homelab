@@ -50,6 +50,6 @@ This lab is hosted on a local Linux environment, orchestrating applications usin
 #### 1. Virtual Machine Provisioning
 - **Hypervisor:** VMware Workstation / VirtualBox / Proxmox
 - **OS:** Ubuntu Server 22.04 LTS
-- **Specs:** 2 vCPUs, 4GB RAM, 30GB Disk
+- **Specs:** 4 vCPUs, 4GB RAM, 30GB Disk
 
 *Documentation and commands will be updated as they are executed.*
