@@ -56,3 +56,11 @@ This lab is hosted on a local Linux environment, orchestrating applications usin
 ```bash
 # Commands executed for initialization:
 sudo apt update && sudo apt upgrade -y
+/
+#### 2. Firewall & SSH Configuration
+To secure the node, the Uncomplicated Firewall (UFW) was enabled, allowing only explicitly permitted traffic, starting with SSH (port 22).
+
+```bash
+sudo ufw allow ssh
+sudo ufw enable
+sudo ufw status verbose
