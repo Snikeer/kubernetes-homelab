@@ -80,8 +80,7 @@ sudo ufw enable
 sudo ufw status verbose
 ```
 
-![Firewall status](images/4_ufw_status.png)
-<img src="images/images/4_ufw_status.png" alt="Linux Installed" width="300">
+<img src="images/4_ufw_status.png" alt="Firewall status" width="300">
 
 #### 3. Container Runtime Installation (Docker)
 To enable container orchestration, Docker was installed and configured as the container runtime interface (CRI). The system user was added to the docker group to allow non-root execution.
