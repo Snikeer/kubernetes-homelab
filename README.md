@@ -58,8 +58,16 @@ This lab is hosted on a local Linux environment, orchestrating applications usin
 sudo apt update && sudo apt upgrade -y
 ```
 
+![VMware Specs](images/1_vmware_specs.png)
+![Linux Installed](images/2_linux_installed.png)
+
 #### 2. Firewall & SSH Configuration
 To secure the node, the Uncomplicated Firewall (UFW) was enabled, allowing only explicitly permitted traffic, starting with SSH (port 22).
+
+```bash
+sudo ufw allow ssh
+sudo ufw enable
+sudo ufw status verbose
 
 ```bash
 # Allow SSH traffic on port 22 through the firewall
