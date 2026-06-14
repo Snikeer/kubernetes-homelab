@@ -21,7 +21,7 @@ This lab is hosted on a local Linux environment, orchestrating applications usin
 ### 🖥️ Phase 1: Infrastructure & Linux Foundation
 - [x] Setup Linux Virtual Machine (Ubuntu Server)
 - [x] Configure SSH, Networking, and Firewall (UFW)
-- [ ] Install and configure Container Runtime (Docker/Containerd)
+- [x] Install and configure Container Runtime (Docker/Containerd)
 
 ### ☸️ Phase 2: Kubernetes Core Setup
 - [ ] Deploy K3s/Kind Kubernetes Cluster
@@ -79,3 +79,23 @@ sudo ufw enable
 # Check if the firewall is active
 sudo ufw status verbose
 ```
+
+#### 3. Container Runtime Installation (Docker)
+To enable container orchestration, Docker was installed and configured as the container runtime interface (CRI). The system user was added to the docker group to allow non-root execution.
+
+```bash
+# Install Docker and configure group
+sudo apt install docker.io -y
+sudo systemctl enable --now docker
+sudo usermod -aG docker $USER
+newgrp docker
+
+# Verify installation
+docker run hello-world
+```
+
+![Docker Verification](images/5_docker_hello_world.png)
+
+
+
+
