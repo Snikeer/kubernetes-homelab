@@ -20,7 +20,7 @@ This lab is hosted on a local Linux environment, orchestrating applications usin
 
 ### 🖥️ Phase 1: Infrastructure & Linux Foundation
 - [x] Setup Linux Virtual Machine (Ubuntu Server)
-- [ ] Configure SSH, Networking, and Firewall (UFW)
+- [x] Configure SSH, Networking, and Firewall (UFW)
 - [ ] Install and configure Container Runtime (Docker/Containerd)
 
 ### ☸️ Phase 2: Kubernetes Core Setup
