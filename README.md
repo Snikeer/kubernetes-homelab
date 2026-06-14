@@ -79,7 +79,7 @@ sudo ufw enable
 # Check if the firewall is active
 sudo ufw status verbose
 ```
-
+<img src="images/images/4_ufw_status.png" alt="Linux Installed" width="300">
 ![Firewall status](images/4_ufw_status.png)
 
 #### 3. Container Runtime Installation (Docker)
