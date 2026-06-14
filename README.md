@@ -51,7 +51,7 @@ This lab is hosted on a local Linux environment, orchestrating applications usin
 - **Hypervisor:** VMware Workstation
 - **OS:** Ubuntu Server 24.04 LTS
 - **Specs:** 4 vCPUs, 4GB RAM, 30GB Disk
-- **Network IP:** 192.168.1.153
+- **Network IP:** 192.168.95.153
 
 ```bash
 # Commands executed for initialization:
