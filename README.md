@@ -96,8 +96,7 @@ newgrp docker
 docker run hello-world
 ```
 
-![Docker Verification](images/5_docker_hello_world.png)
-
+<img src="images/5_docker_hello_world.png" alt="Docker Verification" width="600">
 
 
 
