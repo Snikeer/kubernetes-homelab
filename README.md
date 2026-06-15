@@ -80,7 +80,7 @@ sudo ufw status verbose
 To enable container orchestration, Docker was installed and configured as the container runtime interface (CRI). The system user was added to the docker group to allow non-root execution.
 
 ```bash
-# Installing Docker and configure group
+# Installing Docker and configuring group
 sudo apt install docker.io -y
 sudo systemctl enable --now docker
 sudo usermod -aG docker $USER
