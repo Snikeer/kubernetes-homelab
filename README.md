@@ -28,7 +28,7 @@ This lab is hosted on a local Linux environment, orchestrating applications usin
 - [ ] Configure Cluster Networking & Ingress Controller (Nginx)
 - [ ] Implement Secret and ConfigMap management
 
-### 🔄 Phase 3: GitOps with ArgoCD (The "Tieto" Match)
+### 🔄 Phase 3: GitOps with ArgoCD
 - [ ] Install ArgoCD inside the cluster
 - [ ] Connect this GitHub repository to ArgoCD
 - [ ] Deploy a sample Python API using GitOps auto-sync
