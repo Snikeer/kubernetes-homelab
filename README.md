@@ -130,6 +130,6 @@ kubectl apply -f ingress-test.yaml
 kubectl get ingress
 ```
 
-<img src="images/7_ingress_nginx_success.png" alt="Ingress Routing Verification" width="600">
+<img src="images/7_ingress_nginx_success.png" alt="Ingress Routing Verification" width="400">
 
 
