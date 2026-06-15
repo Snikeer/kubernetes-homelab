@@ -25,7 +25,7 @@ This lab is hosted on a local Linux environment, orchestrating applications usin
 
 ### ☸️ Phase 2: Kubernetes Core Setup
 - [x] Deploy K3s/Kind Kubernetes Cluster
-- [ ] Configure Cluster Networking & Ingress Controller (Nginx)
+- [x] Configure Cluster Networking & Ingress Controller (Nginx/Traefik)
 - [ ] Implement Secret and ConfigMap management
 
 ### 🔄 Phase 3: GitOps with ArgoCD
@@ -111,5 +111,25 @@ curl -sfL https://get.k3s.io | sh -s - --write-kubeconfig-mode 644
 kubectl get nodes
 kubectl get pods -A
 ```
+
 <img src="images/6_k3s_cluster_status.png" alt="k3s Cluster Status" width="600">
+
+
+#### 2. Cluster Networking & Ingress Routing
+To route external HTTP traffic into the cluster, firewall ports 80 and 443 were opened. A test deployment using an Nginx web server was deployed alongside a Kubernetes Service and an Ingress resource managed by the built-in Traefik controller.
+
+```bash
+# Opening HTTP and HTTPS ports
+sudo ufw allow 80/tcp
+sudo ufw allow 443/tcp
+
+# Deploying the Nginx application and Ingress rule
+kubectl apply -f ingress-test.yaml
+
+# Verifying ingress routing
+kubectl get ingress
+```
+
+<img src="images/7_ingress_nginx_success.png" alt="Ingress Routing Verification" width="600">
+
 
