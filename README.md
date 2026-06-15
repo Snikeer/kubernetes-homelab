@@ -54,7 +54,7 @@ This lab is hosted on a local Linux environment, orchestrating applications usin
 - **Network IP:** 192.168.95.153
 
 ```bash
-# Commands executed for initialization:
+# Updating and upgrading the system:
 sudo apt update && sudo apt upgrade -y
 ```
 <img src="images/1_vmware_specs.png" alt="VMware Specs" width="400">
@@ -64,13 +64,13 @@ sudo apt update && sudo apt upgrade -y
 To secure the node, the Uncomplicated Firewall (UFW) was enabled, allowing only explicitly permitted traffic, starting with SSH (port 22).
 
 ```bash
-# Allow SSH traffic on port 22 through the firewall
+# Allowing SSH traffic on port 22 through the firewall
 sudo ufw allow ssh
 
-# Activate the firewall
+# Activating the firewall
 sudo ufw enable
 
-# Check if the firewall is active
+# Checking if the firewall is active
 sudo ufw status verbose
 ```
 
@@ -80,13 +80,13 @@ sudo ufw status verbose
 To enable container orchestration, Docker was installed and configured as the container runtime interface (CRI). The system user was added to the docker group to allow non-root execution.
 
 ```bash
-# Install Docker and configure group
+# Installing Docker and configure group
 sudo apt install docker.io -y
 sudo systemctl enable --now docker
 sudo usermod -aG docker $USER
 newgrp docker
 
-# Verify installation
+# Verifying installation
 docker run hello-world
 ```
 
@@ -101,13 +101,13 @@ A single-node Kubernetes cluster was deployed using K3s. Firewall rules were upd
 - Kubernetes Distribution: K3s v1.35.5+k3s1
 
 ```bash
-# Open Kubernetes API port
+# Opening Kubernetes API port
 sudo ufw allow 6443/tcp
 
-# Install K3s with user access permissions
+# Installing K3s with user access permissions
 curl -sfL https://get.k3s.io | sh -s - --write-kubeconfig-mode 644
 
-# Verify cluster nodes and system pods
+# Verifying cluster nodes and system pods
 kubectl get nodes
 kubectl get pods -A
 ```
