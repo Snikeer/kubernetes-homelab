@@ -24,7 +24,7 @@ This lab is hosted on a local Linux environment, orchestrating applications usin
 - [x] Install and configure Container Runtime (Docker/Containerd)
 
 ### ☸️ Phase 2: Kubernetes Core Setup
-- [ ] Deploy K3s/Kind Kubernetes Cluster
+- [x] Deploy K3s/Kind Kubernetes Cluster
 - [ ] Configure Cluster Networking & Ingress Controller (Nginx)
 - [ ] Implement Secret and ConfigMap management
 
@@ -98,4 +98,23 @@ docker run hello-world
 <img src="images/5_docker_hello_world.png" alt="Docker Verification" width="600">
 
 
+### Phase 2: Kubernetes Core Setup
+
+#### 1. K3s Cluster Deployment
+A single-node Kubernetes cluster was deployed using K3s. Firewall rules were updated to allow traffic on port 6443 (Kubernetes API server). The kubeconfig file permissions were configured to allow the non-root `ubuntu` user to manage the cluster using kubectl.
+
+- Kubernetes Distribution: K3s v1.35.5+k3s1
+
+```bash
+# Open Kubernetes API port
+sudo ufw allow 6443/tcp
+
+# Install K3s with user access permissions
+curl -sfL https://get.k3s.io | sh -s - --write-kubeconfig-mode 644
+
+# Verify cluster nodes and system pods
+kubectl get nodes
+kubectl get pods -A
+```
+<img src="images/6_k3s_cluster_status.png" alt="k3s Cluster Status" width="600">
 
