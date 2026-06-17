@@ -26,7 +26,7 @@ This lab is hosted on a local Linux environment, orchestrating applications usin
 ### ☸️ Phase 2: Kubernetes Core Setup
 - [x] Deploy K3s/Kind Kubernetes Cluster
 - [x] Configure Cluster Networking & Ingress Controller (Nginx/Traefik)
-- [ ] Implement Secret and ConfigMap management
+- [x] Implement Secret and ConfigMap management
 
 ### 🔄 Phase 3: GitOps with ArgoCD
 - [ ] Install ArgoCD inside the cluster
@@ -131,5 +131,21 @@ kubectl get ingress
 ```
 
 <img src="images/7_ingress_nginx_success.png" alt="Ingress Routing Verification" width="400">
+
+
+#### 3. Configuration & Secret Management
+To demonstrate secure application configuration, a `ConfigMap` was created for non-sensitive environment variables, and a `Secret` resource was implemented for sensitive data (such as database credentials). A test pod was deployed to inject these resources as environment variables, verifying successful decryption and decoupling of configuration from container images.
+
+```bash
+# Applying ConfigMap, Secret, and Test Pod
+kubectl apply -f k8s-config-test.yaml
+
+# Inspecting container logs to verify environment variable injection
+kubectl logs config-test-pod
+```
+
+<img src="images/8_k8s_secrets_logs.png" alt="Container logs" width="600">
+
+
 
 
