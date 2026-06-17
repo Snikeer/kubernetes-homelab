@@ -144,7 +144,7 @@ kubectl apply -f k8s-config-test.yaml
 kubectl logs config-test-pod
 ```
 
-<img src="images/8_k8s_secrets_logs.png" alt="Container logs" width="600">
+<img src="images/8_k8s_secrets_logs.png" alt="Container logs" width="500">
 
 
 
