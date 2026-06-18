@@ -29,7 +29,7 @@ This lab is hosted on a local Linux environment, orchestrating applications usin
 - [x] Implement Secret and ConfigMap management
 
 ### 🔄 Phase 3: GitOps with ArgoCD
-- [ ] Install ArgoCD inside the cluster
+- [x] Install ArgoCD inside the cluster
 - [ ] Connect this GitHub repository to ArgoCD
 - [ ] Deploy a sample Python API using GitOps auto-sync
 
@@ -147,5 +147,26 @@ kubectl logs config-test-pod
 <img src="images/8_k8s_secrets_logs.png" alt="Container logs" width="500">
 
 
+### Phase 3: GitOps with ArgoCD
 
+#### 1. ArgoCD Installation & Exposure
+To adopt modern GitOps practices, ArgoCD was deployed into a dedicated namespace. The `argocd-server` service was patched to use a `NodePort` for external browser access, and UFW firewall rules were configured accordingly.
+
+```bash
+# Creating namespace and install ArgoCD
+kubectl create namespace argocd
+kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+
+# Exposing ArgoCD UI via NodePort
+kubectl patch svc argocd-server -n argocd -p '{"spec": {"type": "NodePort"}}'
+
+#To get that port through the firewall
+kubectl get svc -n argocd | grep argocd-server
+sudo ufw allow 32139/tcp
+
+# Retrieving auto-generated admin password
+kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 --decode && echo ""
+```
+
+<img src="images/9_argocd_dashboard.png" alt="Geting in ArgoCD dashboard" width="500">
 
