@@ -279,7 +279,7 @@ No redeployment of applications or changes to Git repository state were required
 -------------------------------------------- 
 
 
-###Now back to the project.
+### Now back to the project.
 
 -------------------------------------------- 
 
@@ -296,4 +296,4 @@ kubectl get pods
 ```
 
 
-<img src="images/10_argocd_gitops_synced.png" alt="Argocd Synced" width="400">
+<img src="images/10_argocd_gitops_synced.png" alt="Argocd Synced" width="600">
