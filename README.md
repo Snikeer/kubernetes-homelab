@@ -34,8 +34,8 @@ This lab is hosted on a local Linux environment, orchestrating applications usin
 - [x] Deploy a sample Python API using GitOps auto-sync
 
 ### 📊 Phase 4: Observability & Monitoring
-- [ ] Deploy Prometheus and Grafana
-- [ ] Create a custom Grafana Dashboard for Cluster Metrics
+- [x] Deploy Prometheus and Grafana
+- [x] Create a custom Grafana Dashboard for Cluster Metrics
 
 ### 🤖 Phase 5: Python Automation & AI/ML Experimentation
 - [ ] Write a Python script using `kubernetes-client` to monitor cluster health
@@ -299,3 +299,35 @@ kubectl get pods
 
 
 <img src="images/10_argocd_gitops_synced.png" alt="Argocd Synced" width="900">
+
+
+### Phase 4: Observability & Monitoring
+
+#### 1. Prometheus & Grafana Deployment (Helm)
+To monitor cluster health and application performance, Helm (the Kubernetes package manager) was installed. The industry-standard `kube-prometheus-stack` was deployed via Helm into a dedicated `monitoring` namespace.
+
+The Grafana dashboard service was exposed via a `NodePort`, allowing deep visibility into real-time CPU, Memory, and Pod metrics.
+
+```bash
+# Install Helm
+curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
+
+# Deploy monitoring stack
+kubectl create namespace monitoring
+helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+helm repo update
+helm install kube-prometheus-stack prometheus-community/kube-prometheus-stack --namespace monitoring
+
+# Expose Grafana UI
+kubectl patch svc kube-prometheus-stack-grafana -n monitoring -p '{"spec": {"type": "NodePort"}}'
+
+#port
+kubectl get svc -n monitoring | grep grafana
+sudo ufw allow 30365/tcp
+
+#secret
+ubuntu@k8-node:~$ kubectl get secret -n monitoring kube-prometheus-stack-grafana -o jsonpath="{.data.admin-password}" | base64 --decode && echo
+```
+
+<img src="images/11_grafana_metrics_dashboard.png" alt="Grafana Dashboard" width="900">
+
