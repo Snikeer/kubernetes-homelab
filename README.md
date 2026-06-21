@@ -176,7 +176,7 @@ kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.pas
 
 --------------------------------------------
 
-
+--------------------------------------------
 
 
 ## 🛠️ Operational Notes & Troubleshooting (GitOps Stability)
@@ -277,11 +277,13 @@ After recovery:
 No redeployment of applications or changes to Git repository state were required.
 
 -------------------------------------------- 
+--------------------------------------------
 
 
 ### Now back to the project.
 
 -------------------------------------------- 
+--------------------------------------------
 
 
 #### 2. GitOps Application Deployment
@@ -296,4 +298,4 @@ kubectl get pods
 ```
 
 
-<img src="images/10_argocd_gitops_synced.png" alt="Argocd Synced" width="600">
+<img src="images/10_argocd_gitops_synced.png" alt="Argocd Synced" width="800">
