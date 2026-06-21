@@ -8,10 +8,10 @@ This lab is hosted on a local Linux environment, orchestrating applications usin
 *Architecture Diagram coming soon*
 
 ## 🛠️ Technology Stack & Skills Demonstrated
-- **OS/Infrastructure:** Linux (Ubuntu Server), Virtualization (VMware/VirtualBox)
-- **Container Orchestration:** Kubernetes (K3s / Kind)
+- **OS/Infrastructure:** Linux (Ubuntu Server), Virtualization (VMware)
+- **Container Orchestration:** Kubernetes (K3s)
 - **GitOps & CI/CD:** ArgoCD, GitHub
-- **Automation & Scripting:** Python, Infrastructure-as-Code (Terraform)
+- **Automation & Scripting:** Python
 - **Observability:** Prometheus, Grafana
 
 ---
