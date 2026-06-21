@@ -298,4 +298,4 @@ kubectl get pods
 ```
 
 
-<img src="images/10_argocd_gitops_synced.png" alt="Argocd Synced" width="800">
+<img src="images/10_argocd_gitops_synced.png" alt="Argocd Synced" width="900">
