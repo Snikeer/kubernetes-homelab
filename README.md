@@ -50,7 +50,7 @@ This lab is hosted on a local Linux environment, orchestrating applications usin
 #### 1. Virtual Machine Provisioning
 - **Hypervisor:** VMware Workstation
 - **OS:** Ubuntu Server 24.04 LTS
-- **Specs:** 4 vCPUs, 4GB RAM, 30GB Disk
+- **Specs:** 4 vCPUs, 8GB RAM, 30GB Disk
 - **Network IP:** 192.168.95.153
 
 ```bash
