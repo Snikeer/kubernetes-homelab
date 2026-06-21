@@ -181,9 +181,9 @@ kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.pas
 
 ## 🛠️ Operational Notes & Troubleshooting (GitOps Stability)
 
-During the GitOps phase, ArgoCD became temporarily unreachable after a system restart. The issue did not affect running workloads, but external access to the ArgoCD UI was lost.
+During a break between project phases, ArgoCD became temporarily unreachable after the virtual machine was suspended and later resumed. Following the resume operation, parts of the Kubernetes control plane and internal cluster networking did not recover correctly. The issue did not affect deployed workloads, but external access to the ArgoCD UI was lost.
 
-This was investigated using standard Kubernetes debugging methods.
+The issue was investigated using standard Kubernetes troubleshooting and debugging techniques.
 
 ---
 
