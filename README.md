@@ -326,7 +326,7 @@ kubectl get svc -n monitoring | grep grafana
 sudo ufw allow 30365/tcp
 
 #secret
-ubuntu@k8-node:~$ kubectl get secret -n monitoring kube-prometheus-stack-grafana -o jsonpath="{.data.admin-password}" | base64 --decode && echo
+kubectl get secret -n monitoring kube-prometheus-stack-grafana -o jsonpath="{.data.admin-password}" | base64 --decode && echo
 ```
 
 <img src="images/11_grafana_metrics_dashboard.png" alt="Grafana Dashboard" width="900">
