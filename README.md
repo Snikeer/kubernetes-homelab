@@ -38,8 +38,8 @@ This lab is hosted on a local Linux environment, orchestrating applications usin
 - [x] Create a custom Grafana Dashboard for Cluster Metrics
 
 ### 🤖 Phase 5: Python Automation & AI/ML Experimentation
-- [ ] Write a Python script using `kubernetes-client` to monitor cluster health
-- [ ] Automate self-healing (auto-restart failing pods) or log analysis
+- [x] Write a Python script using `kubernetes-client` to monitor cluster health
+- [x] Automate self-healing (auto-restart failing pods) or log analysis
 
 ---
 
@@ -330,4 +330,23 @@ kubectl get secret -n monitoring kube-prometheus-stack-grafana -o jsonpath="{.da
 ```
 
 <img src="images/11_grafana_metrics_dashboard.png" alt="Grafana Dashboard" width="900">
+
+
+
+### Phase 5: Python Automation
+
+#### 1. Cluster Automation with Python Client
+To showcase scripting and infrastructure automation capabilities, a custom Python script (`automation/k8s-monitor.py`) was developed. Using the official `kubernetes` Python Client library, the script securely authenticates against the local cluster API using the active `kubeconfig`.
+
+The script scans all active namespaces, analyzes pod phase statuses, filters for application-specific deployments, and prints an automated diagnostic health report to the console.
+
+```bash
+# Install required Python dependencies
+pip3 install kubernetes
+
+# Execute the cluster health automation script
+python3 k8s-monitor.py
+```
+
+<img src="images/12_python_k8s_automation.png" alt="Python automation" width="600">
 
