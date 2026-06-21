@@ -335,16 +335,29 @@ kubectl get secret -n monitoring kube-prometheus-stack-grafana -o jsonpath="{.da
 
 ### Phase 5: Python Automation
 
-#### 1. Cluster Automation with Python Client
-To showcase scripting and infrastructure automation capabilities, a custom Python script (`automation/k8s-monitor.py`) was developed. Using the official `kubernetes` Python Client library, the script securely authenticates against the local cluster API using the active `kubeconfig`.
+#### 1. Cluster Automation & Diagnostics with Python
+To showcase scripting and infrastructure automation capabilities, a custom Python script (`automation/k8s-monitor.py`) was developed to perform automated cluster health checks.
 
-The script scans all active namespaces, analyzes pod phase statuses, filters for application-specific deployments, and prints an automated diagnostic health report to the console.
+##### 🛠️ Engineering Challenges & Resolution:
+- **Python Environment Isolation:** Modern Ubuntu environments enforce PEP 668, preventing global `pip` installations to protect system stability. This was resolved by implementing a dedicated Python Virtual Environment (`venv`) to isolate dependencies.
+- **K3s Kubeconfig Management:** Standard Kubernetes tools look for cluster credentials in `~/.kube/config`. Since K3s stores its configuration natively under `/etc/rancher/k3s/k3s.yaml`, the Python script was explicitly programmed to load the correct K3s configuration file, ensuring seamless authentication.
+
+##### 🚀 Features of the Automation Script:
+- **Node Validation:** Dynamically queries the cluster API to verify that infrastructure nodes are in a `Ready` state.
+- **Deep Pod Inspection:** Iterates through all active namespaces, checks container readiness status, counts pod restarts, and flags any unhealthy or crashing deployments.
+- **Clean Diagnostics Output:** Generates a structured operational report directly to the console with human-readable indicators.
 
 ```bash
-# Install required Python dependencies
-pip3 install kubernetes
+# 1. Set up an isolated Python Virtual Environment
+sudo apt install python3-venv -y
+mkdir ~/python-projects && cd ~/python-projects
+python3 -m venv venv
+source venv/bin/activate
 
-# Execute the cluster health automation script
+# 2. Install dependencies inside the virtual environment
+pip install kubernetes
+
+# 3. Execute the advanced cluster diagnostic script
 python3 k8s-monitor.py
 ```
 
