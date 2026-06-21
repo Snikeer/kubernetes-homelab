@@ -21,11 +21,11 @@ This lab is hosted on a local Linux environment, orchestrating applications usin
 ### 🖥️ Phase 1: Infrastructure & Linux Foundation
 - [x] Setup Linux Virtual Machine (Ubuntu Server)
 - [x] Configure SSH, Networking, and Firewall (UFW)
-- [x] Install and configure Container Runtime (Docker/Containerd)
+- [x] Install and configure Container Runtime (Docker)
 
 ### ☸️ Phase 2: Kubernetes Core Setup
-- [x] Deploy K3s/Kind Kubernetes Cluster
-- [x] Configure Cluster Networking & Ingress Controller (Nginx/Traefik)
+- [x] Deploy K3s Kubernetes Cluster
+- [x] Configure Cluster Networking & Ingress Controller (Traefik)
 - [x] Implement Secret and ConfigMap management
 
 ### 🔄 Phase 3: GitOps with ArgoCD
@@ -34,12 +34,12 @@ This lab is hosted on a local Linux environment, orchestrating applications usin
 - [x] Deploy a sample Python API using GitOps auto-sync
 
 ### 📊 Phase 4: Observability & Monitoring
-- [x] Deploy Prometheus and Grafana
+- [x] Deploy Prometheus and Grafana via Helm
 - [x] Create a custom Grafana Dashboard for Cluster Metrics
 
-### 🤖 Phase 5: Python Automation & AI/ML Experimentation
+### 🤖 Phase 5: Python Automation
 - [x] Write a Python script using `kubernetes-client` to monitor cluster health
-- [x] Automate self-healing (auto-restart failing pods) or log analysis
+- [x] Automate self-healing or log analysis
 
 ---
 
@@ -77,7 +77,7 @@ sudo ufw status verbose
 <img src="images/4_ufw_status.png" alt="Firewall status" width="600">
 
 #### 3. Container Runtime Installation (Docker)
-To enable container orchestration, Docker was installed and configured as the container runtime interface (CRI). The system user was added to the docker group to allow non-root execution.
+To enable container orchestration, Docker was installed and configured as the container runtime interface. The system user was added to the docker group to allow non-root execution.
 
 ```bash
 # Installing Docker and configuring group
@@ -96,9 +96,9 @@ docker run hello-world
 ### Phase 2: Kubernetes Core Setup
 
 #### 1. K3s Cluster Deployment
-A single-node Kubernetes cluster was deployed using K3s. Firewall rules were updated to allow traffic on port 6443 (Kubernetes API server). The kubeconfig file permissions were configured to allow the non-root `ubuntu` user to manage the cluster using kubectl.
+A single-node Kubernetes cluster was deployed using K3s. Firewall rules were updated to allow traffic on port 6443 (Kubernetes API server). The kubeconfig file permissions were configured to allow the non-root user to manage the cluster using kubectl.
 
-- Kubernetes Distribution: K3s v1.35.5+k3s1
+- **Kubernetes Distribution:** K3s v1.30.5+k3s1
 
 ```bash
 # Opening Kubernetes API port
@@ -134,7 +134,7 @@ kubectl get ingress
 
 
 #### 3. Configuration & Secret Management
-To demonstrate secure application configuration, a `ConfigMap` was created for non-sensitive environment variables, and a `Secret` resource was implemented for sensitive data (such as database credentials). A test pod was deployed to inject these resources as environment variables, verifying successful decryption and decoupling of configuration from container images.
+To handle application setup securely, a `ConfigMap` was created for non-sensitive environment variables, and a `Secret` resource was implemented for sensitive data. A test pod was deployed to inject these resources as environment variables, verifying successful decryption and decoupling of configuration from container images.
 
 ```bash
 # Applying ConfigMap, Secret, and Test Pod
@@ -153,14 +153,14 @@ kubectl logs config-test-pod
 To adopt modern GitOps practices, ArgoCD was deployed into a dedicated namespace. The `argocd-server` service was patched to use a `NodePort` for external browser access, and UFW firewall rules were configured accordingly.
 
 ```bash
-# Creating namespace and install ArgoCD
+# Creating namespace and installing ArgoCD
 kubectl create namespace argocd
 kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
 
 # Exposing ArgoCD UI via NodePort
 kubectl patch svc argocd-server -n argocd -p '{"spec": {"type": "NodePort"}}'
 
-#To get that port through the firewall
+# Finding the port and allowing it through the firewall
 kubectl get svc -n argocd | grep argocd-server
 sudo ufw allow 32139/tcp
 
@@ -173,126 +173,13 @@ kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.pas
 
 
 
-
---------------------------------------------
-
---------------------------------------------
-
-
-## 🛠️ Operational Notes & Troubleshooting (GitOps Stability)
-
-During a break between project phases, ArgoCD became temporarily unreachable after the virtual machine was suspended and later resumed. Following the resume operation, parts of the Kubernetes control plane and internal cluster networking did not recover correctly. The issue did not affect deployed workloads, but external access to the ArgoCD UI was lost.
-
-The issue was investigated using standard Kubernetes troubleshooting and debugging techniques.
-
----
-
-### 🔍 Initial Checks
-
-The ArgoCD service exposure was verified:
-
-```bash
-kubectl get svc -n argocd | grep argocd-server
-```
-
-NodePort configuration confirmed:
-
-```text
-argocd-server  NodePort  80:31253/TCP,443:32139/TCP
-```
-
-Firewall rules were also checked:
-
-```bash
-sudo ufw status verbose
-```
-
-At this stage, external configuration appeared correct, but the UI was still unreachable.
-
----
-
-### 🔁 Service Re-Exposure and NodePort Update
-
-To rule out service misconfiguration, the ArgoCD service was re-applied:
-
-```bash
-kubectl patch svc argocd-server -n argocd -p '{"spec": {"type": "NodePort"}}'
-```
-
-This caused Kubernetes to assign a new NodePort for HTTPS access:
-
-```text
-443:30946/TCP
-```
-
-The previous port (`32139`) was no longer active, and firewall rules were updated accordingly:
-
-```bash
-sudo ufw allow 30946/tcp
-```
-
----
-
-### 🧪 Root Cause Investigation
-
-The issue was traced to Kubernetes control plane instability after a system restart. This affected internal cluster networking and communication between ArgoCD components and Kubernetes services.
-
-Cluster state was inspected:
-
-```bash
-kubectl get pods -n argocd
-kubectl get nodes
-curl -k https://localhost:30946
-```
-
-The investigation revealed that the `argocd-server` pod was in a degraded state (`CrashLoopBackOff`), preventing the service from becoming available.
-
----
-
-### 🔧 Fix Applied
-
-The Kubernetes service was restarted to restore cluster networking:
-
-```bash
-sudo systemctl restart k3s
-```
-
-After the control plane was restored, all ArgoCD pods were restarted to ensure a clean runtime state:
-
-```bash
-kubectl delete pod -n argocd --all
-```
-
----
-
-### ✅ Result
-
-After recovery:
-
-- Kubernetes networking was restored
-- All ArgoCD pods returned to the `Running` state
-- GitOps synchronization resumed normally
-- UI access via NodePort (`30946`) was restored
-
-No redeployment of applications or changes to Git repository state were required.
-
--------------------------------------------- 
---------------------------------------------
-
-
-### Now back to the project.
-
--------------------------------------------- 
---------------------------------------------
-
-
 #### 2. GitOps Application Deployment
-An application manifest (`apps/alex-production-app.yaml`) was committed to this GitHub repository. ArgoCD was configured to track the `/apps` directory using an automatic synchronization policy (`Self-Heal` and `Prune` enabled). 
+An application manifest (`apps/alex-production-app.yaml`) was committed to this GitHub repository. ArgoCD was configured to track the `/apps` directory using an automatic synchronization policy (`Self-Heal` and `Prune` enabled).
 
 Any modifications made to the repository are now automatically reconciled and deployed by ArgoCD into the cluster without manual intervention.
 
 ```bash
-# Verify resources created by ArgoCD via GitOps
+# Verifying resources created by ArgoCD via GitOps
 kubectl get deployments
 kubectl get pods
 ```
@@ -301,31 +188,62 @@ kubectl get pods
 <img src="images/10_argocd_gitops_synced.png" alt="Argocd Synced" width="900">
 
 
+
+---
+
+### 🔍 Day-2 Operations: Resolving Control Plane Instability After VM Suspend
+
+During a break between project phases, the virtual machine was suspended and later resumed. Following the resume operation, the ArgoCD UI became unreachable. While existing application workloads remained active, internal cluster networking and control plane communication had degraded.
+
+Here is the breakdown of the engineering diagnostic and recovery process:
+
+1. **Service and Firewall Verification:**
+   Checking the ArgoCD service status revealed that re-applying the service configuration caused Kubernetes to assign a new random NodePort (`30946`). The firewall was updated to reflect this:
+   ```bash
+   sudo ufw allow 30946/tcp
+   ```
+
+2. **Root Cause Identification:**
+   Even with the firewall updated, the UI remained down. Investigating the pods showed that `argocd-server` was stuck in a `CrashLoopBackOff` state. The internal cluster networking layer had failed to fully recover from the VM suspension, breaking core service communication.
+
+3. **Resolution & Mitigation:**
+   To restore the cluster state, the K3s system service was restarted to clean up networking bridges, followed by a bounce of the ArgoCD pods to force a clean runtime state:
+   ```bash
+   sudo systemctl restart k3s
+   kubectl delete pod -n argocd --all
+   ```
+   This successfully brought all pods back to a `Running` state, and GitOps synchronization resumed automatically without requiring any app redeployments.
+
+---
+
+
+
+
 ### Phase 4: Observability & Monitoring
 
 #### 1. Prometheus & Grafana Deployment (Helm)
-To monitor cluster health and application performance, Helm (the Kubernetes package manager) was installed. The industry-standard `kube-prometheus-stack` was deployed via Helm into a dedicated `monitoring` namespace.
+To monitor cluster health and performance, the Helm package manager was installed. The industry-standard `kube-prometheus-stack` was deployed via Helm into a dedicated `monitoring` namespace.
 
 The Grafana dashboard service was exposed via a `NodePort`, allowing deep visibility into real-time CPU, Memory, and Pod metrics.
 
 ```bash
-# Install Helm
+# Installing Helm
 curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
 
-# Deploy monitoring stack
+# Deploying monitoring stack
 kubectl create namespace monitoring
 helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
 helm repo update
 helm install kube-prometheus-stack prometheus-community/kube-prometheus-stack --namespace monitoring
 
-# Expose Grafana UI
+# Exposing Grafana UI
 kubectl patch svc kube-prometheus-stack-grafana -n monitoring -p '{"spec": {"type": "NodePort"}}'
 
-#port
+# Finding port and allow through firewall
 kubectl get svc -n monitoring | grep grafana
 sudo ufw allow 30365/tcp
 
-#secret
+# Retrieving admin password
 kubectl get secret -n monitoring kube-prometheus-stack-grafana -o jsonpath="{.data.admin-password}" | base64 --decode && echo
 ```
 
@@ -336,7 +254,7 @@ kubectl get secret -n monitoring kube-prometheus-stack-grafana -o jsonpath="{.da
 ### Phase 5: Python Automation
 
 #### 1. Cluster Automation & Diagnostics with Python
-To showcase scripting and infrastructure automation capabilities, a custom Python script (`automation/k8s-monitor.py`) was developed to perform automated cluster health checks.
+To showcase infrastructure automation capabilities, a custom Python script (`automation/k8s-monitor.py`) was developed to perform automated cluster health checks using the official Kubernetes API client.
 
 ##### 🛠️ Engineering Challenges & Resolution:
 - **Python Environment Isolation:** Modern Ubuntu environments enforce PEP 668, preventing global `pip` installations to protect system stability. This was resolved by implementing a dedicated Python Virtual Environment (`venv`) to isolate dependencies.
@@ -346,18 +264,18 @@ To showcase scripting and infrastructure automation capabilities, a custom Pytho
 - **Node Validation:** Dynamically queries the cluster API to verify that infrastructure nodes are in a `Ready` state.
 - **Deep Pod Inspection:** Iterates through all active namespaces, checks container readiness status, counts pod restarts, and flags any unhealthy or crashing deployments.
 - **Clean Diagnostics Output:** Generates a structured operational report directly to the console with human-readable indicators.
-
+- 
 ```bash
-# 1. Set up an isolated Python Virtual Environment
+# 1. Seting up an isolated Python Virtual Environment
 sudo apt install python3-venv -y
 mkdir ~/python-projects && cd ~/python-projects
 python3 -m venv venv
 source venv/bin/activate
 
-# 2. Install dependencies inside the virtual environment
+# 2. Installing dependencies inside the virtual environment
 pip install kubernetes
 
-# 3. Execute the advanced cluster diagnostic script
+# 3. Executing the advanced cluster diagnostic script
 python3 k8s-monitor.py
 ```
 
