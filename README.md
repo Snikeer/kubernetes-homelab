@@ -30,8 +30,8 @@ This lab is hosted on a local Linux environment, orchestrating applications usin
 
 ### 🔄 Phase 3: GitOps with ArgoCD
 - [x] Install ArgoCD inside the cluster
-- [ ] Connect this GitHub repository to ArgoCD
-- [ ] Deploy a sample Python API using GitOps auto-sync
+- [x] Connect this GitHub repository to ArgoCD
+- [x] Deploy a sample Python API using GitOps auto-sync
 
 ### 📊 Phase 4: Observability & Monitoring
 - [ ] Deploy Prometheus and Grafana
@@ -172,7 +172,12 @@ kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.pas
 
 
 
+
+
 --------------------------------------------
+
+
+
 
 ## 🛠️ Operational Notes & Troubleshooting (GitOps Stability)
 
@@ -274,4 +279,21 @@ No redeployment of applications or changes to Git repository state were required
 -------------------------------------------- 
 
 
-Now back to the project.
+###Now back to the project.
+
+-------------------------------------------- 
+
+
+#### 2. GitOps Application Deployment
+An application manifest (`apps/alex-production-app.yaml`) was committed to this GitHub repository. ArgoCD was configured to track the `/apps` directory using an automatic synchronization policy (`Self-Heal` and `Prune` enabled). 
+
+Any modifications made to the repository are now automatically reconciled and deployed by ArgoCD into the cluster without manual intervention.
+
+```bash
+# Verify resources created by ArgoCD via GitOps
+kubectl get deployments
+kubectl get pods
+```
+
+
+<img src="images/10_argocd_gitops_synced.png" alt="Argocd Synced" width="400">
