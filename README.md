@@ -170,3 +170,105 @@ kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.pas
 
 <img src="images/9_argocd_dashboard.png" alt="Geting in ArgoCD dashboard" width="500">
 
+
+
+--------------------------------------------
+
+## 🛠️ Operational Notes & Troubleshooting (GitOps Stability)
+
+During the GitOps phase, ArgoCD became temporarily unreachable after a system restart. The issue did not affect running workloads, but external access to the ArgoCD UI was lost.
+
+This was investigated using standard Kubernetes debugging methods.
+
+---
+
+### 🔍 Initial Checks
+
+The ArgoCD service exposure was verified:
+
+```bash
+kubectl get svc -n argocd | grep argocd-server
+```
+
+NodePort configuration confirmed:
+
+```text
+argocd-server  NodePort  80:31253/TCP,443:32139/TCP
+```
+
+Firewall rules were also checked:
+
+```bash
+sudo ufw status verbose
+```
+
+At this stage, external configuration appeared correct, but the UI was still unreachable.
+
+---
+
+### 🔁 Service Re-Exposure and NodePort Update
+
+To rule out service misconfiguration, the ArgoCD service was re-applied:
+
+```bash
+kubectl patch svc argocd-server -n argocd -p '{"spec": {"type": "NodePort"}}'
+```
+
+This caused Kubernetes to assign a new NodePort for HTTPS access:
+
+```text
+443:30946/TCP
+```
+
+The previous port (`32139`) was no longer active, and firewall rules were updated accordingly:
+
+```bash
+sudo ufw allow 30946/tcp
+```
+
+---
+
+### 🧪 Root Cause Investigation
+
+The issue was traced to Kubernetes control plane instability after a system restart. This affected internal cluster networking and communication between ArgoCD components and Kubernetes services.
+
+Cluster state was inspected:
+
+```bash
+kubectl get pods -n argocd
+kubectl get nodes
+curl -k https://localhost:30946
+```
+
+The investigation revealed that the `argocd-server` pod was in a degraded state (`CrashLoopBackOff`), preventing the service from becoming available.
+
+---
+
+### 🔧 Fix Applied
+
+The Kubernetes service was restarted to restore cluster networking:
+
+```bash
+sudo systemctl restart k3s
+```
+
+After the control plane was restored, all ArgoCD pods were restarted to ensure a clean runtime state:
+
+```bash
+kubectl delete pod -n argocd --all
+```
+
+---
+
+### ✅ Result
+
+After recovery:
+
+- Kubernetes networking was restored
+- All ArgoCD pods returned to the `Running` state
+- GitOps synchronization resumed normally
+- UI access via NodePort (`30946`) was restored
+
+No redeployment of applications or changes to Git repository state were required.
+
+-------------------------------------------- Now back to the project.
