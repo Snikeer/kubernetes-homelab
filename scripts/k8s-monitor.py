@@ -108,9 +108,9 @@ def monitor_cluster():
 
 
 def check_nodes():
-    """
-    Verify the status of all Kubernetes nodes.
-    """
+    
+    #Verifying the status of all Kubernetes nodes.
+    
 
     v1 = client.CoreV1Api()
 
